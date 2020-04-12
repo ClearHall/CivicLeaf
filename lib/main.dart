@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quickvolunteer/views/login.dart';
+import 'package:quickvolunteer/views/map.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,7 +14,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      routes: {
+        "/" : (context) => LoginScreen(),
+        "/mainMap" : (context) => MainMap()
+      },
     );
   }
 }
