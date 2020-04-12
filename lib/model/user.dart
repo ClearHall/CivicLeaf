@@ -13,7 +13,7 @@ class User {
     return User(
         name: data['name'],
         interests: data['interests'],
-        signups: data['signups'].map.((event) => Event(
+        signups: data['signups'].map((event) => Event(
       name: event['name'],
       description: event['description'],
       location: event['location'] ,

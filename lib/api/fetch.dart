@@ -1,5 +1,5 @@
 import 'package:civicleaf/api/api.dart';
-import 'package:quickvolunteer/model/user.dart';
+import 'package:civicleaf/model/user.dart';
 
 class FetchModify {
   Api events = new Api('events');
