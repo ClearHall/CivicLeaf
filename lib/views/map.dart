@@ -89,7 +89,9 @@ class _MainMapState extends State<MainMap> {
             DrawerSection(Icons.event, 'My Events', () {
               Navigator.of(context).pushNamed('/myEvents', arguments: _events);
             }),
-            DrawerSection(Icons.assignment, 'Sign Up For Events', () {}),
+            DrawerSection(Icons.assignment, 'Sign Up For Events', () {
+              Navigator.of(context).pushNamed('/signupEvent');
+            }),
             DrawerSection(Icons.create, 'Create Events', () {}),
             DrawerSection(Icons.grade, 'Events I\'m Hosting', () {}),
             DrawerSection(Icons.calendar_today, 'My Calendar', () {})
