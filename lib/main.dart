@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:civicleaf/views/login.dart';
 import 'package:civicleaf/views/map.dart';
+import 'package:civicleaf/views/event/myevents.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,9 +15,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
       routes: {
         "/" : (context) => LoginScreen(),
-        "/mainMap" : (context) => MainMap()
+        "/mainMap" : (context) => MainMap(),
+        "/myEvents" : (context) => MyEvents(ModalRoute.of(context).settings.arguments)
       },
     );
   }

@@ -1,7 +1,11 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:civicleaf/model/user.dart';
+import 'package:civicleaf/views/event/myevents.dart';
 
 class MainMap extends StatefulWidget {
   @override
@@ -9,18 +13,61 @@ class MainMap extends StatefulWidget {
 }
 
 class _MainMapState extends State<MainMap> {
+  List<Event> _events = List();
   Completer<GoogleMapController> _controller = Completer();
+  Set<Marker> _markers = Set();
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  static CameraPosition _currentPostition;
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  @override
+  void initState() {
+    _events.add(Event(
+        name: 'Memorial Park',
+        description:
+            'I AM A LONG DESCRIPTION SHOWING HOW LOGN I AM CAUSE I AM JUST REALLY LONG!',
+        start: Timestamp.fromDate(DateTime(2020, 4, 11, 4, 20, 1)),
+        end: Timestamp.fromDate(DateTime(2020, 4, 15, 4, 30, 0)),
+        location: GeoPoint(20.9391, -95.3)));
+    getCurrentLocation();
+    super.initState();
+  }
+
+  getCurrentLocation() async {
+    var loc = await Geolocator().getCurrentPosition();
+    setState(() {
+      _currentPostition = CameraPosition(
+          target: LatLng(loc.latitude, loc.longitude), zoom: 14.4746);
+      for (int i = 0; i < _events.length; i++) {
+        Event e = _events[i];
+        _markers.add(Marker(
+            markerId: MarkerId('$i'),
+            position: LatLng(e.location.latitude, e.location.longitude),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (c) => Dialog(
+                          child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            EventWidget(e),
+                            Align(
+                              alignment: Alignment.center,
+                              child: FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(c).pop();
+                                  },
+                                  child: Text('Ok')),
+                            )
+                          ],
+                        ),
+                      )));
+            }));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,30 +86,28 @@ class _MainMapState extends State<MainMap> {
                 ),
               ),
             ),
-            DrawerSection(Icons.event, 'My Events', () {}),
+            DrawerSection(Icons.event, 'My Events', () {
+              Navigator.of(context).pushNamed('/myEvents', arguments: _events);
+            }),
             DrawerSection(Icons.assignment, 'Sign Up For Events', () {}),
+            DrawerSection(Icons.create, 'Create Events', () {}),
+            DrawerSection(Icons.grade, 'Events I\'m Hosting', () {}),
             DrawerSection(Icons.calendar_today, 'My Calendar', () {})
           ],
         ),
       ),
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
-      ),
+      body: _currentPostition == null
+          ? Align(
+              alignment: Alignment.center, child: CircularProgressIndicator())
+          : GoogleMap(
+              markers: _markers,
+              mapType: MapType.normal,
+              initialCameraPosition: _currentPostition,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+            ),
     );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
 
