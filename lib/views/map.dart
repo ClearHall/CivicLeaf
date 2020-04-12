@@ -80,6 +80,7 @@ class _MainMapState extends State<MainMap> {
   Future _getEvents() async {
     String currUid = (await FirebaseAuth.instance.currentUser()).uid;
     _events = (await FetchModify().getUsers()).firstWhere((element) => element.id == currUid).signups;
+    _events.addAll((await FetchModify().getEvents()).where((element) => element.creator().id == currUid).toList());
   }
 
   @override
