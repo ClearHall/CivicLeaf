@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
   String name;
-  List<Signup> signups;
+  List<Event> signups;
   List<String> interests;
 
   User({this.name, this.interests, this.signups});
@@ -12,16 +12,22 @@ class User {
 
     return User(
         name: data['name'],
-        interests: data['interests'] ,
-        signups: data['signups'] ?? ''
+        interests: data['interests'],
+        signups: data['signups'].map.((event) => Event(
+      name: event['name'],
+      description: event['description'],
+      location: event['location'] ,
+      start: event['start'],
+      end: event['end'],
+    )).toList(),
     );
   }
 }
 class Event {
   String name;
   String description;
-  DateTime start;
-  DateTime end;
+  Timestamp start;
+  Timestamp end;
   GeoPoint location;
 
   Event({this.name, this.description, this.start, this.end, this.location});
@@ -32,10 +38,9 @@ class Event {
     return Event(
         name: data['name'],
         description: data['description'],
-        location: data['interests'] ,
-        start: DateTime(data['start']),
+        location: data['location'] ,
+        start: data['start'],
+        end: data['end'],
     );
   }
-}
-class Signup {
 }
