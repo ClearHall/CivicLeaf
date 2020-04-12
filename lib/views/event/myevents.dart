@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:civicleaf/model/user.dart';
+import 'package:civicleaf/views/extras/HuntyDialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyEvents extends StatefulWidget {
   final List<Event> events;
@@ -50,66 +52,88 @@ class EventWidget extends Container {
   final Event event;
   final bool optIn;
 
-  EventWidget(this.event, {this.optIn = false})
-      : super(
-            decoration: new BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  new BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      blurRadius: 20.0,
-                      spreadRadius: 0,
-                      offset: Offset(5, 5)),
-                ]),
-            padding: EdgeInsets.all(20),
-            child: Container(
-                child: Card(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
+  static Future<void> openMap(
+      double latitude, double longitude, BuildContext c) async {
+    String googleUrl =
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      showDialog(
+          context: c,
+          builder: (con) => HuntyDialog(
+              title: 'Uh OH',
+              description:
+                  'You do not have google maps installed. We could not route you to your destination.',
+              buttonText: 'Ok'));
+    }
+  }
+
+  EventWidget(this.event, {this.optIn = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: new BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              new BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  blurRadius: 20.0,
+                  spreadRadius: 0,
+                  offset: Offset(5, 5)),
+            ]),
+        padding: EdgeInsets.all(20),
+        child: Container(
+            child: Card(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: <Widget>[
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      event.name,
+                      style: TextStyle(fontSize: 20),
+                    )),
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      event.description,
+                      style: TextStyle(fontSize: 12),
+                    )),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          event.creator.name ?? '',
-                          style: TextStyle(fontSize: 20),
-                        )),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          event.description,
-                          style: TextStyle(fontSize: 12),
-                        )),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.all(7),
-                            child: Row(children: <Widget>[
-                              Icon(Icons.event),
-                              Text(
-                                  "${event.start.toDate().month}/${event.start.toDate().day}/${event.start.toDate().year} - ${event.end.toDate().month}/${event.end.toDate().day}/${event.end.toDate().year}")
-                            ]),
-                          ),
-                        ),
-                      ],
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(7),
+                        child: Row(children: <Widget>[
+                          Icon(Icons.event),
+                          Text(
+                              "${event.start.toDate().month}/${event.start.toDate().day}/${event.start.toDate().year} - ${event.end.toDate().month}/${event.end.toDate().day}/${event.end.toDate().year}")
+                        ]),
+                      ),
                     ),
-                    RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        color: Colors.blue,
-                        onPressed: () {
-                          //TODO: ADD OPT INTO EVENT
-                        },
-                        child: Container(
-                          child: Text('Route me there!'),
-                        )),
-                    optIn ? RaisedButton(
+                  ],
+                ),
+                RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    color: Colors.blue,
+                    onPressed: () {
+                      openMap(event.location.latitude, event.location.longitude,
+                          context);
+                    },
+                    child: Container(
+                      child: Text('Route me there!'),
+                    )),
+                optIn
+                    ? RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
@@ -119,7 +143,8 @@ class EventWidget extends Container {
                         },
                         child: Container(
                           child: Text('Opt In'),
-                        )) : RaisedButton(
+                        ))
+                    : RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
@@ -130,8 +155,9 @@ class EventWidget extends Container {
                         child: Container(
                           child: Text('Opt Out'),
                         ))
-                  ],
-                ),
-              ),
-            )));
+              ],
+            ),
+          ),
+        )));
+  }
 }
