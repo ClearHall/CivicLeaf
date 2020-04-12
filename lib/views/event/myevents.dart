@@ -73,6 +73,7 @@ class EventWidget extends Container {
 
   @override
   Widget build(BuildContext context) {
+    print(event.creator);
     return Container(
         decoration: new BoxDecoration(
             borderRadius: BorderRadius.circular(10),

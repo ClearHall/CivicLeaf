@@ -33,6 +33,7 @@ class _MainMapState extends State<MainMap> {
           target: LatLng(loc.latitude, loc.longitude), zoom: 6.4746);
       for (int i = 0; i < _events.length; i++) {
         Event e = _events[i];
+        print(e);
         _markers.add(Marker(
             markerId: MarkerId('$i'),
             position: LatLng(e.location.latitude, e.location.longitude),
@@ -86,11 +87,14 @@ class _MainMapState extends State<MainMap> {
             DrawerSection(Icons.assignment, 'Sign Up For Events', () {
               Navigator.of(context).pushNamed('/signupEvent');
             }),
-            DrawerSection(Icons.create, 'Create Events', () {}),
+            DrawerSection(Icons.create, 'Create Events', () {
+              Navigator.of(context).pushNamed('/createEvent');
+            }),
             DrawerSection(Icons.grade, 'Events I\'m Hosting', () {}),
             DrawerSection(Icons.calendar_today, 'My Calendar', () {}),
             DrawerSection(Icons.arrow_back, 'Logout', () {
-              Navigator.of(context).popUntil((route) => route.settings.name == '/');
+              Navigator.of(context)
+                  .popUntil((route) => route.settings.name == '/');
             })
           ],
         ),

@@ -9,6 +9,6 @@ class FetchModify {
   }
 
   Future<List<User>> getUsers() async {
-    return (await events.getDataCollection()).documents.map((doc) => User.fromFirestore(doc)).toList();
+    return (await users.getDataCollection()).documents.map((doc) => User.fromFirestore(doc)).toList();
   }
 }
