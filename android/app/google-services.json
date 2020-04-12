@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:893104865116:android:f68696317484a0b3e28b99",
         "android_client_info": {
-          "package_name": "com.clearhall.quickvolunteer"
+          "package_name": "dev.clearhall.civicleaf"
         }
       },
       "oauth_client": [
