@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "893104865116",
+    "firebase_url": "https://civic-leaf.firebaseio.com",
+    "project_id": "civic-leaf",
+    "storage_bucket": "civic-leaf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893104865116:android:f68696317484a0b3e28b99",
+        "android_client_info": {
+          "package_name": "com.clearhall.quickvolunteer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893104865116-i2dc6jpu0fbph0qoddmte5rgc16cpdps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVhLYmGAwKa7bSIgn8fkLeAwvVoCmemuU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893104865116-i2dc6jpu0fbph0qoddmte5rgc16cpdps.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

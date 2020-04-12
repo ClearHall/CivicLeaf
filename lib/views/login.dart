@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -8,6 +9,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +23,7 @@ class LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 TextFormField(
+                  controller: emailController,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     labelText: "   Username",
@@ -34,6 +38,7 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
                 Padding(padding: EdgeInsets.all(12.0)),
                 TextFormField(
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                       labelText: "   Password",
@@ -58,7 +63,20 @@ class LoginScreenState extends State<LoginScreen> {
                           fontSize: 15
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      try {
+                        AuthResult result = await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text);
+                      } catch (e) {
+                        if (e.code == "ERROR_USER_NOT_FOUND") {
+                          await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                              email: emailController.text,
+                              password: passwordController.text);
+                        }
+                      }
                     },
                   ),
                 ),
