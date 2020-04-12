@@ -65,7 +65,7 @@ class LoginScreenState extends State<LoginScreen> {
                     ),
                     onPressed: () async {
                       try {
-                        AuthResult result = await FirebaseAuth.instance
+                        await FirebaseAuth.instance
                             .signInWithEmailAndPassword(
                             email: emailController.text,
                             password: passwordController.text);
