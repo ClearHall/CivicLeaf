@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:civicleaf/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,10 @@ class _CreateEventState extends State<CreateEvent> {
         initialDate: selectedStartDate,
         firstDate: DateTime(2020),
         lastDate: DateTime(2101));
-    TimeOfDay t = await showTimePicker(context: context, initialTime: TimeOfDay(hour: picked.hour, minute: picked.minute),);
+    TimeOfDay t = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: picked.hour, minute: picked.minute),
+    );
     picked.add(Duration(hours: t.hour, minutes: t.minute));
     if (picked != null && picked != selectedStartDate)
       setState(() {
@@ -41,7 +45,10 @@ class _CreateEventState extends State<CreateEvent> {
         initialDate: selectedEndDate,
         firstDate: DateTime(2020),
         lastDate: DateTime(2101));
-    TimeOfDay t = await showTimePicker(context: context, initialTime: TimeOfDay(hour: picked.hour, minute: picked.minute),);
+    TimeOfDay t = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: picked.hour, minute: picked.minute),
+    );
     picked.add(Duration(hours: t.hour, minutes: t.minute));
     if (picked != null && picked != selectedEndDate)
       setState(() {
@@ -53,29 +60,33 @@ class _CreateEventState extends State<CreateEvent> {
     if (eventDescController.text.length < 10000 &&
         eventNameController.text.length < 100 &&
         adressControllerr.text.length < 1000) {
-      var addresses =
-          await Geocoder.local.findAddressesFromQuery(adressControllerr.text);
-      if (addresses.length >= 1) {
-        var first = addresses.first;
-        if (selectedEndDate.isAfter(selectedStartDate)) {
-          FetchModify().events.getCollectionReference().document().setData({
-            "name": eventNameController.text,
-            "description": eventDescController.text,
-            "location": GeoPoint(
-                first.coordinates.latitude, first.coordinates.longitude),
-            "start": Timestamp.fromDate(selectedStartDate),
-            "end": Timestamp.fromDate(selectedEndDate),
-            "creator": FetchModify()
-                .users
-                .getCollectionReference()
-                .document((await FirebaseAuth.instance.currentUser()).uid)
-          });
-            _showError(context, 'SUCCESS!');
+      try {
+        var addresses =
+            await Geocoder.local.findAddressesFromQuery(adressControllerr.text);
+        if (addresses.length >= 1) {
+          var first = addresses.first;
+          if (selectedEndDate.isAfter(selectedStartDate)) {
+            FetchModify().events.getCollectionReference().document().setData({
+              "name": eventNameController.text,
+              "description": eventDescController.text,
+              "location": GeoPoint(
+                  first.coordinates.latitude, first.coordinates.longitude),
+              "start": Timestamp.fromDate(selectedStartDate),
+              "end": Timestamp.fromDate(selectedEndDate),
+              "creator": FetchModify()
+                  .users
+                  .getCollectionReference()
+                  .document((await FirebaseAuth.instance.currentUser()).uid)
+            });
+            _showError(context, 'Success!');
+          } else {
+            _showError(context, 'Your end date must be after your start date!');
+          }
         } else {
-          _showError(context, 'Your end date must be after your start date!');
+          _showError(context, 'Your address is invalid.');
         }
-      } else {
-        _showError(context, 'Your adress is invalid.');
+      } catch (e) {
+        _showError(context, 'Your address is invalid.');
       }
     } else {
       _showError(context, 'Your description, title, or adress is too long.');
@@ -130,7 +141,7 @@ class _CreateEventState extends State<CreateEvent> {
               TextFormField(
                 controller: adressControllerr,
                 decoration: InputDecoration(
-                    labelText: "   Adress",
+                    labelText: "   Address",
                     border: OutlineInputBorder(
                       borderSide: BorderSide(),
                     ),

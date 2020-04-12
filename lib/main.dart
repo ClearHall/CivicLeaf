@@ -1,3 +1,4 @@
+import 'package:civicleaf/views/event/eventsHosting.dart';
 import 'package:flutter/material.dart';
 import 'package:civicleaf/views/login.dart';
 import 'package:civicleaf/views/map.dart';
@@ -21,9 +22,10 @@ class MyApp extends StatelessWidget {
       routes: {
         "/" : (context) => LoginScreen(),
         "/mainMap" : (context) => MainMap(),
-        "/myEvents" : (context) => MyEvents(ModalRoute.of(context).settings.arguments),
+        "/myEvents" : (context) => MyEvents(),
         "/signupEvent" : (context) => SignUpForEvent(),
         "/createEvent" : (context) => CreateEvent(),
+        "/eventsHosting" : (context) => EventsHosting(),
       },
     );
   }

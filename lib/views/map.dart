@@ -115,7 +115,10 @@ class _MainMapState extends State<MainMap> {
                 reset();
               });
             }),
-            DrawerSection(Icons.grade, 'Events I\'m Hosting', () {}),
+            DrawerSection(Icons.grade, 'Events I\'m Hosting', () {
+              Navigator.of(context).pushNamed('/eventsHosting').then((value) {
+                reset();
+              });}),
             DrawerSection(Icons.calendar_today, 'My Calendar', () {}),
             DrawerSection(Icons.arrow_back, 'Logout', () {
               Navigator.of(context)

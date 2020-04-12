@@ -18,13 +18,15 @@ class User {
     _sUp = data['signups'].cast<DocumentReference>();
   }
 
-  Future<void> getSignUps() async{
+  Future<void> getSignUps() async {
     List<Event> eventList = List();
-    for(DocumentReference ref in _sUp){
+    for (DocumentReference ref in _sUp) {
       DocumentSnapshot s = await ref.get();
-      Event e = Event.fromFirestore(s);
-      await e.getCreator();
-      eventList.add(e);
+      try {
+        Event e = Event.fromFirestore(s);
+        await e.getCreator();
+        eventList.add(e);
+      } catch (e) {}
     }
     signups = eventList;
   }

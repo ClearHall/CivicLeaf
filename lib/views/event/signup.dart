@@ -31,10 +31,12 @@ class _SignUpForEventState extends State<SignUpForEvent> {
         .signups;
     for (int i = _eventsNearMe.length - 1; i >= 0; i--) {
       try {
-        if (_events.firstWhere((element) =>
-        element.id == _eventsNearMe[i].id) !=
+        if (_events
+                .firstWhere((element) => element.id == _eventsNearMe[i].id) !=
             null) _eventsNearMe.removeAt(i);
-      }catch(e){}
+      } catch (e) {
+        if (_eventsNearMe[i].creator().id == currUid) _eventsNearMe.removeAt(i);
+      }
     }
     _sortEventsByLocation();
   }
@@ -77,7 +79,10 @@ class _SignUpForEventState extends State<SignUpForEvent> {
   Widget build(BuildContext context) {
     List<Widget> wid = List();
     for (Event e in _eventsNearMe) {
-      wid.add(EventWidget(e, optIn: true, after: (){setState(() {});},));
+      wid.add(EventWidget(
+        e,
+        optIn: true,
+      ));
     }
 
     return Scaffold(

@@ -8,17 +8,12 @@ import 'package:civicleaf/api/fetch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyEvents extends StatefulWidget {
-  final List<Event> events;
-
-  MyEvents(this.events);
-
   @override
-  _MyEventsState createState() => _MyEventsState(events);
+  _MyEventsState createState() => _MyEventsState();
 }
 
 class _MyEventsState extends State<MyEvents> {
   List<Event> events;
-  _MyEventsState(this.events);
   bool loaded = false;
 
   List<Widget> widgets = List<Widget>();
@@ -32,7 +27,16 @@ class _MyEventsState extends State<MyEvents> {
   @override
   Widget build(BuildContext context) {
     List<EventWidget> wid = [];
-    if (loaded) for (Event e in events) wid.add(EventWidget(e));
+    if (loaded)
+      for (Event e in events)
+        wid.add(EventWidget(
+          e,
+          onDelete: () {
+            setState(() {
+              events.remove(e);
+            });
+          },
+        ));
 
     return Scaffold(
       appBar: AppBar(
@@ -61,18 +65,18 @@ class _MyEventsState extends State<MyEvents> {
 class EventWidget extends StatefulWidget {
   final Event event;
   bool optIn;
-  final Function after;
-  EventWidget(this.event, {this.optIn = false, this.after});
+  Function onDelete;
+  EventWidget(this.event, {this.optIn = false, this.onDelete});
   @override
-  _EventWidget createState() => _EventWidget(
-        event,
-        optIn: optIn,
-      );
+  _EventWidget createState() =>
+      _EventWidget(event, optIn: optIn, onDelete: onDelete);
 }
 
 class _EventWidget extends State<EventWidget> {
   final Event event;
   bool optIn;
+  bool wait;
+  Function onDelete;
 
   static Future<void> openMap(
       double latitude, double longitude, BuildContext c) async {
@@ -91,7 +95,19 @@ class _EventWidget extends State<EventWidget> {
     }
   }
 
-  _EventWidget(this.event, {this.optIn = false});
+  @override
+  void initState() {
+    _waitForGettingUserID();
+    super.initState();
+  }
+
+  _waitForGettingUserID() async {
+    wait =
+        event.creator().id == (await FirebaseAuth.instance.currentUser()).uid;
+    setState(() {});
+  }
+
+  _EventWidget(this.event, {this.optIn = false, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -154,40 +170,64 @@ class _EventWidget extends State<EventWidget> {
                     child: Container(
                       child: Text('Route me there!'),
                     )),
-                optIn
-                    ? RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        color: Colors.green,
-                        onPressed: () {
-                          setState(() {
-                            opt(optIn);
-                            optIn = false;
-                          });
-                        },
-                        child: Container(
-                          child: Text('Opt In'),
-                        ))
-                    : RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        color: Colors.red,
-                        onPressed: () {
-                          opt(optIn);
-                          setState(() {
-                            opt(optIn);
-                            optIn = true;
-                          });
-                        },
-                        child: Container(
-                          child: Text('Opt Out'),
-                        ))
+                wait == null
+                    ? CircularProgressIndicator()
+                    : wait
+                        ? RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            color: Colors.red,
+                            onPressed: () {
+                              setState(() {
+                                delEvent();
+                                onDelete();
+                              });
+                            },
+                            child: Container(
+                              child: Text('Delete Event'),
+                            ))
+                        : (optIn
+                            ? RaisedButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                color: Colors.green,
+                                onPressed: () {
+                                  setState(() {
+                                    opt(optIn);
+                                    optIn = !optIn;
+                                  });
+                                },
+                                child: Container(
+                                  child: Text('Opt In'),
+                                ))
+                            : RaisedButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                color: Colors.red,
+                                onPressed: () {
+                                  setState(() {
+                                    opt(optIn);
+                                    optIn = !optIn;
+                                  });
+                                },
+                                child: Container(
+                                  child: Text('Opt Out'),
+                                )))
               ],
             ),
           ),
         )));
+  }
+
+  Future<void> delEvent() async {
+    await FetchModify()
+        .events
+        .getCollectionReference()
+        .document(event.id)
+        .delete();
   }
 
   Future<void> opt(bool optin) async {
