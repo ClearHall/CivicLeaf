@@ -105,7 +105,7 @@ class LoginScreenState extends State<LoginScreen> {
                             try {
                               await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
-                                      email: emailController.text,
+                                      email: emailController.text.trim(),
                                       password: passwordController.text);
                               Navigator.of(context).pushNamed('/mainMap');
                             } catch (e) {
