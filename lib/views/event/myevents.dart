@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:civicleaf/model/user.dart';
 import 'package:civicleaf/views/extras/HuntyDialog.dart';
+import 'package:civicleaf/api/fetch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyEvents extends StatefulWidget {
@@ -18,6 +19,7 @@ class MyEvents extends StatefulWidget {
 class _MyEventsState extends State<MyEvents> {
   List<Event> events;
   _MyEventsState(this.events);
+  bool loaded = false;
 
   List<Widget> widgets = List<Widget>();
 
@@ -30,27 +32,47 @@ class _MyEventsState extends State<MyEvents> {
   @override
   Widget build(BuildContext context) {
     List<EventWidget> wid = [];
-    for (Event e in events) wid.add(EventWidget(e));
+    if (loaded) for (Event e in events) wid.add(EventWidget(e));
 
     return Scaffold(
       appBar: AppBar(
         title: Text('My Events'),
       ),
-      body: ListView(
-        children: wid,
-      ),
+      body: !loaded
+          ? Align(
+              alignment: Alignment.center, child: CircularProgressIndicator())
+          : ListView(
+              children: wid,
+            ),
     );
   }
 
   void _getEventsAvailable() async {
-    User user = User.fromFirestore(await Api('users').getDocumentById((await FirebaseAuth.instance.currentUser()).uid));
-    events = user.signups;
+    User user = User.fromFirestore(await Api('users')
+        .getDocumentById((await FirebaseAuth.instance.currentUser()).uid));
+    await user.getSignUps();
+    setState(() {
+      events = user.signups;
+      loaded = true;
+    });
   }
 }
 
-class EventWidget extends Container {
+class EventWidget extends StatefulWidget {
   final Event event;
-  final bool optIn;
+  bool optIn;
+  final Function after;
+  EventWidget(this.event, {this.optIn = false, this.after});
+  @override
+  _EventWidget createState() => _EventWidget(
+        event,
+        optIn: optIn,
+      );
+}
+
+class _EventWidget extends State<EventWidget> {
+  final Event event;
+  bool optIn;
 
   static Future<void> openMap(
       double latitude, double longitude, BuildContext c) async {
@@ -69,11 +91,10 @@ class EventWidget extends Container {
     }
   }
 
-  EventWidget(this.event, {this.optIn = false});
+  _EventWidget(this.event, {this.optIn = false});
 
   @override
   Widget build(BuildContext context) {
-    print(event.creator);
     return Container(
         decoration: new BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -140,7 +161,10 @@ class EventWidget extends Container {
                         ),
                         color: Colors.green,
                         onPressed: () {
-                          //TODO: ADD OPT INTO EVENT
+                          setState(() {
+                            opt(optIn);
+                            optIn = false;
+                          });
                         },
                         child: Container(
                           child: Text('Opt In'),
@@ -151,7 +175,11 @@ class EventWidget extends Container {
                         ),
                         color: Colors.red,
                         onPressed: () {
-                          //TODO: ADD OPT OUT OF EVENT
+                          opt(optIn);
+                          setState(() {
+                            opt(optIn);
+                            optIn = true;
+                          });
                         },
                         child: Container(
                           child: Text('Opt Out'),
@@ -160,5 +188,28 @@ class EventWidget extends Container {
             ),
           ),
         )));
+  }
+
+  Future<void> opt(bool optin) async {
+    var a = FetchModify()
+        .users
+        .getCollectionReference()
+        .document((await FirebaseAuth.instance.currentUser()).uid);
+    var events = FetchModify().events.getCollectionReference();
+    User curr;
+    await a.get().then((value) => curr = User.fromFirestore(value));
+    await curr.getSignUps();
+    List<DocumentReference> eventRef = List();
+    for (var e in curr.signups) eventRef.add(events.document(e.id));
+    if (optin)
+      eventRef.add(events.document(event.id));
+    else
+      eventRef.removeWhere((element) => element.documentID == event.id);
+    Map<String, dynamic> data = {
+      "name": curr.name,
+      "interests": curr.interests,
+      "signups": eventRef
+    };
+    a.updateData(data);
   }
 }

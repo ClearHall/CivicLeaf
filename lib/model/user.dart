@@ -6,24 +6,27 @@ class User {
   List<String> interests;
   String id;
 
+  List<DocumentReference> _sUp;
+
   User({this.name, this.interests, this.signups});
 
   User.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
     id = doc.documentID;
-    User(
-      name: data['name'],
-      interests: data['interests'].cast<String>(),
-      signups: data['signups']
-          .map((event) => Event(
-                c: event['creator'],
-                description: event['description'],
-                location: event['location'],
-                start: event['start'],
-                end: event['end'],
-              ))
-          .toList().cast<Event>(),
-    );
+    name = data['name'];
+    interests = data['interests'].cast<String>();
+    _sUp = data['signups'].cast<DocumentReference>();
+  }
+
+  Future<void> getSignUps() async{
+    List<Event> eventList = List();
+    for(DocumentReference ref in _sUp){
+      DocumentSnapshot s = await ref.get();
+      Event e = Event.fromFirestore(s);
+      await e.getCreator();
+      eventList.add(e);
+    }
+    signups = eventList;
   }
 
   @override
@@ -33,7 +36,7 @@ class User {
 }
 
 class Event {
-  User creator;
+  User _creator;
   String name;
   String description;
   Timestamp start;
@@ -41,25 +44,37 @@ class Event {
   GeoPoint location;
   String id;
 
-  Event({this.name, this.description, this.start, this.end, this.location, DocumentReference c}){
-    c.get().then((value) => creator = User.fromFirestore(value));
+  Future<DocumentSnapshot> c;
+
+  Event({this.name, this.description, this.start, this.end, this.location});
+  fromDocSnap(Future<DocumentSnapshot> c) async {
+    this.c = c;
+  }
+
+  Future<User> getCreator() async {
+    if (_creator == null) {
+      _creator = await c.then((value) => User.fromFirestore(value));
+    }
+    return _creator;
+  }
+
+  User creator() {
+    return _creator;
   }
 
   Event.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
     id = doc.documentID;
-    Event(
-      name: data['name'],
-      description: data['description'],
-      location: data['location'],
-      start: data['start'],
-      end: data['end'],
-      c: data['creator']
-    );
+    name = data['name'];
+    description = data['description'];
+    location = data['location'];
+    start = data['start'];
+    end = data['end'];
+    fromDocSnap(data['creator'].get());
   }
 
   @override
   String toString() {
-    return 'Event{creator: $creator, name: $name, description: $description, start: $start, end: $end, location: $location, id: $id}';
+    return 'Event{name: $name, description: $description, start: $start, end: $end, location: $location, id: $id}';
   }
 }

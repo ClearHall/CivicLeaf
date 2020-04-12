@@ -9,6 +9,10 @@ class Api{
     ref = _db.collection(path);
   }
 
+  CollectionReference getCollectionReference(){
+    return ref;
+  }
+
   Future<QuerySnapshot> getDataCollection() {
     return ref.getDocuments();
   }

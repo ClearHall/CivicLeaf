@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:civicleaf/api/fetch.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,46 +27,64 @@ class _MainMapState extends State<MainMap> {
   }
 
   getCurrentLocation() async {
-    _events = await FetchModify().getEvents();
+    await _getEvents();
     var loc = await Geolocator().getCurrentPosition();
     setState(() {
-      _currentPostition = CameraPosition(
-          target: LatLng(loc.latitude, loc.longitude), zoom: 6.4746);
       for (int i = 0; i < _events.length; i++) {
         Event e = _events[i];
-        print(e);
         _markers.add(Marker(
             markerId: MarkerId('$i'),
             position: LatLng(e.location.latitude, e.location.longitude),
             onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (c) => Dialog(
-                          child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            EventWidget(e),
-                            Align(
-                              alignment: Alignment.center,
-                              child: FlatButton(
-                                  onPressed: () {
-                                    Navigator.of(c).pop();
-                                  },
-                                  child: Text('Ok')),
-                            )
-                          ],
-                        ),
-                      )));
+              _showDiag(e);
             }));
       }
+      _currentPostition = CameraPosition(
+          target: LatLng(loc.latitude, loc.longitude), zoom: 6.4746);
     });
+  }
+
+  Future _showDiag(Event e) async {
+     await showDialog(
+        context: context,
+        builder: (c) => Dialog(
+                child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  EventWidget(e),
+                  Align(
+                    alignment: Alignment.center,
+                    child: FlatButton(
+                        onPressed: () {
+                          Navigator.of(c).pop();
+                        },
+                        child: Text('Ok')),
+                  )
+                ],
+              ),
+            )));
+    setState(() {
+      reset();
+    });
+  }
+
+  void reset(){
+    _currentPostition = null;
+    getCurrentLocation();
+    _markers = Set();
+  }
+
+  Future _getEvents() async {
+    String currUid = (await FirebaseAuth.instance.currentUser()).uid;
+    _events = (await FetchModify().getUsers()).firstWhere((element) => element.id == currUid).signups;
   }
 
   @override
   Widget build(BuildContext context) {
+    _getEvents();
     return Scaffold(
       appBar: AppBar(
         title: Text('Event Map'),
@@ -82,13 +101,19 @@ class _MainMapState extends State<MainMap> {
               ),
             ),
             DrawerSection(Icons.event, 'My Events', () {
-              Navigator.of(context).pushNamed('/myEvents', arguments: _events);
+              Navigator.of(context).pushNamed('/myEvents', arguments: _events).then((value) {
+                reset();
+              });
             }),
             DrawerSection(Icons.assignment, 'Sign Up For Events', () {
-              Navigator.of(context).pushNamed('/signupEvent');
+              Navigator.of(context).pushNamed('/signupEvent').then((value) {
+                reset();
+              });
             }),
             DrawerSection(Icons.create, 'Create Events', () {
-              Navigator.of(context).pushNamed('/createEvent');
+              Navigator.of(context).pushNamed('/createEvent').then((value) {
+                reset();
+              });
             }),
             DrawerSection(Icons.grade, 'Events I\'m Hosting', () {}),
             DrawerSection(Icons.calendar_today, 'My Calendar', () {}),

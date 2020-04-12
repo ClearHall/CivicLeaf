@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:civicleaf/api/fetch.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:civicleaf/model/user.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,7 +25,17 @@ class _SignUpForEventState extends State<SignUpForEvent> {
   void _getEventsAvailable() async {
     _eventsNearMe = await FetchModify().getEvents();
 
-    //DO NOT REMOVE THIS LINE!
+    String currUid = (await FirebaseAuth.instance.currentUser()).uid;
+    List<Event> _events = (await FetchModify().getUsers())
+        .firstWhere((element) => element.id == currUid)
+        .signups;
+    for (int i = _eventsNearMe.length - 1; i >= 0; i--) {
+      try {
+        if (_events.firstWhere((element) =>
+        element.id == _eventsNearMe[i].id) !=
+            null) _eventsNearMe.removeAt(i);
+      }catch(e){}
+    }
     _sortEventsByLocation();
   }
 
@@ -65,8 +76,8 @@ class _SignUpForEventState extends State<SignUpForEvent> {
   @override
   Widget build(BuildContext context) {
     List<Widget> wid = List();
-    for(Event e in _eventsNearMe){
-      wid.add(EventWidget(e, optIn: true));
+    for (Event e in _eventsNearMe) {
+      wid.add(EventWidget(e, optIn: true, after: (){setState(() {});},));
     }
 
     return Scaffold(
