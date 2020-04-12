@@ -77,6 +77,7 @@ class LoginScreenState extends State<LoginScreen> {
                               password: passwordController.text);
                         }
                       }
+                      Navigator.of(context).pushNamed('/mainMap');
                     },
                   ),
                 ),

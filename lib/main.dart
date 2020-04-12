@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quickvolunteer/views/login.dart';
-import 'package:quickvolunteer/views/map.dart';
+import 'package:civicleaf/views/login.dart';
+import 'package:civicleaf/views/map.dart';
 
 void main() {
   runApp(MyApp());
