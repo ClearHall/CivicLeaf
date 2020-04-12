@@ -96,7 +96,7 @@ class _MainMapState extends State<MainMap> {
             DrawerHeader(
               child: FittedBox(
                 child: Text(
-                  "MEIN NAME",
+                  'Welcome!',
                   maxLines: 10,
                 ),
               ),
