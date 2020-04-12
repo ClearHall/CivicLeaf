@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:civicleaf/api/fetch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,18 +22,12 @@ class _MainMapState extends State<MainMap> {
 
   @override
   void initState() {
-    _events.add(Event(
-        name: 'Memorial Park',
-        description:
-            'I AM A LONG DESCRIPTION SHOWING HOW LOGN I AM CAUSE I AM JUST REALLY LONG!',
-        start: Timestamp.fromDate(DateTime(2020, 4, 11, 4, 20, 1)),
-        end: Timestamp.fromDate(DateTime(2020, 4, 15, 4, 30, 0)),
-        location: GeoPoint(20.9391, -95.3)));
     getCurrentLocation();
     super.initState();
   }
 
   getCurrentLocation() async {
+    _events = await FetchModify().getEvents();
     var loc = await Geolocator().getCurrentPosition();
     setState(() {
       _currentPostition = CameraPosition(
