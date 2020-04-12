@@ -85,6 +85,17 @@ class EventWidget extends Container {
                         ),
                       ],
                     ),
+                    RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        color: Colors.blue,
+                        onPressed: () {
+                          //TODO: ADD OPT INTO EVENT
+                        },
+                        child: Container(
+                          child: Text('Route me there!'),
+                        )),
                     optIn ? RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),

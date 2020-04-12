@@ -31,7 +31,7 @@ class _MainMapState extends State<MainMap> {
     var loc = await Geolocator().getCurrentPosition();
     setState(() {
       _currentPostition = CameraPosition(
-          target: LatLng(loc.latitude, loc.longitude), zoom: 14.4746);
+          target: LatLng(loc.latitude, loc.longitude), zoom: 6.4746);
       for (int i = 0; i < _events.length; i++) {
         Event e = _events[i];
         _markers.add(Marker(
@@ -89,7 +89,10 @@ class _MainMapState extends State<MainMap> {
             }),
             DrawerSection(Icons.create, 'Create Events', () {}),
             DrawerSection(Icons.grade, 'Events I\'m Hosting', () {}),
-            DrawerSection(Icons.calendar_today, 'My Calendar', () {})
+            DrawerSection(Icons.calendar_today, 'My Calendar', () {}),
+            DrawerSection(Icons.arrow_back, 'Logout', () {
+              Navigator.of(context).popUntil((route) => route.settings.name == '/');
+            })
           ],
         ),
       ),

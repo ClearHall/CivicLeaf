@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:civicleaf/views/extras/HuntyDialog.dart';
+import 'package:flutter/services.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -22,6 +24,12 @@ class LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Container(
+                    padding: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      'Welcome',
+                      style: TextStyle(fontSize: 30),
+                    )),
                 TextFormField(
                   controller: emailController,
                   textInputAction: TextInputAction.next,
@@ -50,61 +58,69 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
                 Padding(padding: EdgeInsets.only(top: 32)),
                 Row(
-                  children: [
-                    ButtonTheme(
-                      minWidth: 175,
-                      height: 50,
-                      child: FlatButton(
-                        color: Colors.tealAccent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(64)),
-                        child: Text(
-                          "SIGNUP",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ButtonTheme(
+                        minWidth: 140,
+                        height: 50,
+                        child: FlatButton(
+                          color: Colors.tealAccent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(64)),
+                          child: Text(
+                            "SIGNUP",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
                           ),
-                        ),
-                        onPressed: () async {
-                          await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                              email: emailController.text,
-                              password: passwordController.text);
-                          Navigator.of(context).pushNamed('/mainMap');
-                        },
-                      ),
-                    ),
-                    ButtonTheme(
-                      minWidth: 175,
-                      height: 50,
-                      child: FlatButton(
-                        color: Colors.tealAccent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(64)),
-                        child: Text(
-                          "LOGIN",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15
-                          ),
-                        ),
-                        onPressed: () async {
-                          try {
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                email: emailController.text,
-                                password: passwordController.text);
-                          } catch (e) {
-                            if (e.code == "ERROR_USER_NOT_FOUND") {
-                              // TODO: Create dialog warning user not found
+                          onPressed: () async {
+                            try {
+                              await FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                      email: emailController.text,
+                                      password: passwordController.text);
+                              Navigator.of(context).pushNamed('/mainMap');
+                            } on PlatformException catch (e) {
+                              showDialog(
+                                  context: context,
+                                  builder: (c) => HuntyDialog(
+                                        buttonText: 'Ok',
+                                        title: 'Uh Oh!',
+                                        description: e.message,
+                                      ));
                             }
-                          }
-                          Navigator.of(context).pushNamed('/mainMap');
-                        },
+                          },
+                        ),
                       ),
-                    ),
-                  ]
-                ),
+                      ButtonTheme(
+                        minWidth: 140,
+                        height: 50,
+                        child: FlatButton(
+                          color: Colors.tealAccent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(64)),
+                          child: Text(
+                            "LOGIN",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                          onPressed: () async {
+                            try {
+                              await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                      email: emailController.text,
+                                      password: passwordController.text);
+                              Navigator.of(context).pushNamed('/mainMap');
+                            } catch (e) {
+                              showDialog(
+                                  context: context,
+                                  builder: (c) => HuntyDialog(
+                                        buttonText: 'Ok',
+                                        title: 'Uh Oh!',
+                                        description: e.message,
+                                      ));
+                            }
+                          },
+                        ),
+                      )
+                    ]),
               ],
             ),
           ),
