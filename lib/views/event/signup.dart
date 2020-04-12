@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:civicleaf/api/fetch.dart';
 import 'package:flutter/material.dart';
 import 'package:civicleaf/model/user.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,7 +22,7 @@ class _SignUpForEventState extends State<SignUpForEvent> {
   }
 
   void _getEventsAvailable() async {
-    //TODO: Get list of available events.
+    _eventsNearMe = await FetchModify().getEvents();
 
     //DO NOT REMOVE THIS LINE!
     _sortEventsByLocation();

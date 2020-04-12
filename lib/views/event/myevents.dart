@@ -1,4 +1,6 @@
+import 'package:civicleaf/api/api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:civicleaf/model/user.dart';
 
@@ -12,10 +14,16 @@ class MyEvents extends StatefulWidget {
 }
 
 class _MyEventsState extends State<MyEvents> {
-  final List<Event> events;
+  List<Event> events;
   _MyEventsState(this.events);
 
   List<Widget> widgets = List<Widget>();
+
+  @override
+  void initState() {
+    _getEventsAvailable();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +38,11 @@ class _MyEventsState extends State<MyEvents> {
         children: wid,
       ),
     );
+  }
+
+  void _getEventsAvailable() async {
+    User user = User.fromFirestore(await Api('users').getDocumentById((await FirebaseAuth.instance.currentUser()).uid));
+    events = user.signups;
   }
 }
 
@@ -58,7 +71,7 @@ class EventWidget extends Container {
                     Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          event.name,
+                          event.creator.name ?? '',
                           style: TextStyle(fontSize: 20),
                         )),
                     Align(

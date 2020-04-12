@@ -4,17 +4,18 @@ class User {
   String name;
   List<Event> signups;
   List<String> interests;
+  String id;
 
   User({this.name, this.interests, this.signups});
 
-  factory User.fromFirestore(DocumentSnapshot doc) {
+  User.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
-
-    return User(
+    id = doc.documentID;
+    User(
         name: data['name'],
         interests: data['interests'],
         signups: data['signups'].map((event) => Event(
-      name: event['name'],
+      creator: event['creator'],
       description: event['description'],
       location: event['location'] ,
       start: event['start'],
@@ -24,23 +25,26 @@ class User {
   }
 }
 class Event {
-  String name;
+  User creator;
   String description;
   Timestamp start;
   Timestamp end;
   GeoPoint location;
+  String id;
 
-  Event({this.name, this.description, this.start, this.end, this.location});
+  Event({this.creator, this.description, this.start, this.end, this.location});
 
-  factory Event.fromFirestore(DocumentSnapshot doc) {
+  Event.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
-
-    return Event(
-        name: data['name'],
+    id = doc.documentID;
+    data['creator'].get().then((snap) => creator=User.fromFirestore(snap));
+    Event(
         description: data['description'],
         location: data['location'] ,
         start: data['start'],
         end: data['end'],
+
     );
+
   }
 }
