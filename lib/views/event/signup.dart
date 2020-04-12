@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:civicleaf/model/user.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:civicleaf/views/event/myevents.dart';
 
 class SignUpForEvent extends StatefulWidget {
   @override
@@ -30,12 +31,12 @@ class _SignUpForEventState extends State<SignUpForEvent> {
     var location = await Geolocator().getCurrentPosition();
     setState(() {
       _eventsNearMe.sort((e1, e2) => (distanceBetweenTwoPointsInKM(
-          e1.location.latitude,
-          e1.location.longitude,
-          location.latitude,
-          location.latitude) -
-          (distanceBetweenTwoPointsInKM(e2.location.latitude,
-              e2.location.longitude, location.latitude, location.latitude)))
+                  e1.location.latitude,
+                  e1.location.longitude,
+                  location.latitude,
+                  location.latitude) -
+              (distanceBetweenTwoPointsInKM(e2.location.latitude,
+                  e2.location.longitude, location.latitude, location.latitude)))
           .round());
       finishLoading = true;
     });
@@ -47,7 +48,10 @@ class _SignUpForEventState extends State<SignUpForEvent> {
     var dLat = convertDegreesToRad(lat2 - lat1);
     var dLon = convertDegreesToRad(lon2 - lon1);
     var a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(convertDegreesToRad(lat1)) * cos(convertDegreesToRad(lat2)) * sin(dLon / 2) * sin(dLon / 2);
+        cos(convertDegreesToRad(lat1)) *
+            cos(convertDegreesToRad(lat2)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
     var c = 2 * atan2(sqrt(a), sqrt(1 - a));
     var d = R * c;
     return d;
@@ -60,15 +64,20 @@ class _SignUpForEventState extends State<SignUpForEvent> {
   @override
   Widget build(BuildContext context) {
     List<Widget> wid = List();
+    for(Event e in _eventsNearMe){
+      wid.add(EventWidget(e, optIn: true));
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: finishLoading ? Text('Sign Up for Events') : Align(
-            alignment: Alignment.center, child: CircularProgressIndicator()),
+        title: Text('Sign Up for Events'),
       ),
-      body: ListView(
-        children: wid,
-      ),
+      body: finishLoading
+          ? ListView(
+              children: wid,
+            )
+          : Align(
+              alignment: Alignment.center, child: CircularProgressIndicator()),
     );
   }
 }
