@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>893104865116-n6u52n4d082hqil1gnhftvctsc5hqd6k.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.893104865116-n6u52n4d082hqil1gnhftvctsc5hqd6k</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCHpFlGMdnxUXGK5s0UwrxEJXlUYzichQU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>893104865116</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>dev.clearhall.civicleaf</string>
+	<key>PROJECT_ID</key>
+	<string>civic-leaf</string>
+	<key>STORAGE_BUCKET</key>
+	<string>civic-leaf.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:893104865116:ios:35c736890a23129be28b99</string>
+	<key>DATABASE_URL</key>
+	<string>https://civic-leaf.firebaseio.com</string>
+</dict>
+</plist>
