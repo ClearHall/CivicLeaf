@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "747799024060",
-    "firebase_url": "https://note-app-dev.firebaseio.com",
-    "project_id": "note-app-dev",
-    "storage_bucket": "note-app-dev.appspot.com"
+    "project_number": "893104865116",
+    "firebase_url": "https://civic-leaf.firebaseio.com",
+    "project_id": "civic-leaf",
+    "storage_bucket": "civic-leaf.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:747799024060:android:12a44c09b32bf75c3d5bb9",
+        "mobilesdk_app_id": "1:893104865116:android:23b089f236823c52e28b99",
         "android_client_info": {
-          "package_name": "com.example.create_flutter_provider_app.dev"
+          "package_name": "dev.clearhall.civicleaf"
         }
       },
       "oauth_client": [
         {
-          "client_id": "747799024060-0i7261mp5tipeb817cpcr7s0cn29ck0a.apps.googleusercontent.com",
+          "client_id": "893104865116-i2dc6jpu0fbph0qoddmte5rgc16cpdps.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA_mDikkCUSSDXiwFKly7GlC25LJEJHsFA"
+          "current_key": "AIzaSyC67gDsVZNMUrjFbqC2EaIBxA-uQSqt2Ng"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "747799024060-0i7261mp5tipeb817cpcr7s0cn29ck0a.apps.googleusercontent.com",
+              "client_id": "893104865116-i2dc6jpu0fbph0qoddmte5rgc16cpdps.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

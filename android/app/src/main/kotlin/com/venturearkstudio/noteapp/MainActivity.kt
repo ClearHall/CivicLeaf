@@ -1,4 +1,4 @@
-package com.venturearkstudio.noteapp
+package com.venturearkstudio.civic_leaf
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

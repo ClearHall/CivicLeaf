@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/ui/splash/splash_screen.dart';
+import 'package:civic_leaf/ui/splash/splash_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

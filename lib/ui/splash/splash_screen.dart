@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
-import 'package:noteapp/routes.dart';
+import 'package:civic_leaf/app_localizations.dart';
+import 'package:civic_leaf/routes.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

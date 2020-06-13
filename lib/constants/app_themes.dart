@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/constants/app_font_family.dart';
+import 'package:civic_leaf/constants/app_font_family.dart';
 
 class AppThemes {
   AppThemes._();

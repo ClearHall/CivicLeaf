@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:noteapp/app_localizations.dart';
-import 'package:noteapp/providers/auth_provider.dart';
-import 'package:noteapp/providers/theme_provider.dart';
-import 'package:noteapp/routes.dart';
-import 'package:noteapp/ui/setting/setting_language_actions.dart';
+import 'package:civic_leaf/app_localizations.dart';
+import 'package:civic_leaf/providers/auth_provider.dart';
+import 'package:civic_leaf/providers/theme_provider.dart';
+import 'package:civic_leaf/routes.dart';
+import 'package:civic_leaf/ui/setting/setting_language_actions.dart';
 import 'package:provider/provider.dart';
 
 class SettingScreen extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
-import 'package:noteapp/flavor.dart';
-import 'package:noteapp/providers/auth_provider.dart';
-import 'package:noteapp/routes.dart';
+import 'package:civic_leaf/app_localizations.dart';
+import 'package:civic_leaf/flavor.dart';
+import 'package:civic_leaf/providers/auth_provider.dart';
+import 'package:civic_leaf/routes.dart';
 import 'package:provider/provider.dart';
 
 class SignInScreen extends StatefulWidget {

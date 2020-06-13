@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/models/user_model.dart';
-import 'package:noteapp/providers/auth_provider.dart';
-import 'package:noteapp/services/firestore_database.dart';
+import 'package:civic_leaf/models/user_model.dart';
+import 'package:civic_leaf/providers/auth_provider.dart';
+import 'package:civic_leaf/services/firestore_database.dart';
 import 'package:provider/provider.dart';
 
 /*

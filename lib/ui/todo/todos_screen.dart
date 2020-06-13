@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:noteapp/app_localizations.dart';
-import 'package:noteapp/models/todo_model.dart';
-import 'package:noteapp/models/user_model.dart';
-import 'package:noteapp/providers/auth_provider.dart';
-import 'package:noteapp/routes.dart';
-import 'package:noteapp/services/firestore_database.dart';
-import 'package:noteapp/ui/todo/empty_content.dart';
-import 'package:noteapp/ui/todo/todos_extra_actions.dart';
+import 'package:civic_leaf/app_localizations.dart';
+import 'package:civic_leaf/models/todo_model.dart';
+import 'package:civic_leaf/models/user_model.dart';
+import 'package:civic_leaf/providers/auth_provider.dart';
+import 'package:civic_leaf/routes.dart';
+import 'package:civic_leaf/services/firestore_database.dart';
+import 'package:civic_leaf/ui/todo/empty_content.dart';
+import 'package:civic_leaf/ui/todo/todos_extra_actions.dart';
 import 'package:provider/provider.dart';
 
 class TodosScreen extends StatelessWidget {
