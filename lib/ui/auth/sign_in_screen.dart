@@ -1,3 +1,4 @@
+import 'package:civic_leaf/ui/custom/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:civic_leaf/app_localizations.dart';
 import 'package:civic_leaf/flavor.dart';
@@ -106,13 +107,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : RaisedButton(
+                    : HuntyButton(
                         child: Text(
                           AppLocalizations.of(context)
                               .translate("loginBtnSignIn"),
                           style: Theme.of(context).textTheme.button,
                         ),
-                        onPressed: () async {
+                        func: () async {
                           if (_formKey.currentState.validate()) {
                             FocusScope.of(context)
                                 .unfocus(); //to hide the keyboard - if any
