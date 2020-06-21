@@ -1,9 +1,13 @@
 {
+  "welcome": "欢迎",
+  "welcomeDescription": "最好寻找义工机会，带来新的可能性。",
+  "welcomeContinue": "我们开始吧！",
   "splashTitle": "欢迎来到 ",
   "alertDialogTitle": "警报",
   "alertDialogMessage": "这将注销。 你确定吗？",
   "alertDialogCancelBtn": "取消",
   "alertDialogYesBtn": "是",
+  "continue": "继续",
   "loginTxtEmail": "电子邮件",
   "loginTxtPassword": "密码",
   "loginBtnSignIn": "登入",

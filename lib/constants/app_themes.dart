@@ -6,10 +6,10 @@ class AppThemes {
 
   //constants color range for light theme
   static const Color _lightPrimaryColor = Colors.black;
-  static const Color _lightPrimaryVariantColor = Colors.deepPurpleAccent;
+  static const Color _lightPrimaryVariantColor = Colors.white;
   static const Color _lightSecondaryColor = Colors.green;
   static const Color _lightOnPrimaryColor = Colors.black;
-  static const Color _lightButtonPrimaryColor = Colors.purpleAccent;
+  static const Color _lightButtonPrimaryColor = Colors.deepPurple;
   static const Color _lightAppBarColor = Colors.orangeAccent;
   static Color _lightIconColor = Colors.deepPurple;
   static Color _lightSnackBarBackgroundErrorColor = Colors.redAccent;

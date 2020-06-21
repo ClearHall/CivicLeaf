@@ -1,3 +1,5 @@
+import 'package:civic_leaf/ui/auth/welcome.dart';
+import 'package:civic_leaf/ui/setting/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:civic_leaf/app_localizations.dart';
 import 'package:civic_leaf/auth_widget_builder.dart';
@@ -78,7 +80,7 @@ class MyApp extends StatelessWidget {
                           ConnectionState.active) {
                         return userSnapshot.hasData
                             ? HomeScreen()
-                            : SignInScreen();
+                            : WelcomeScreen();
                       }
 
                       return Material(

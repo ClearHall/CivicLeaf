@@ -1,4 +1,7 @@
 {
+  "welcome": "Welcome",
+  "welcomeDescription": "The best way to find volunteer opportunities and expand your vision. Let's get started.",
+  "welcomeContinue": "Continue",
   "splashTitle": "Welcome to ",
   "alertDialogTitle": "Alert",
   "alertDialogMessage": "This will logout. Are you sure?",
